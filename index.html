@@ -29,6 +29,8 @@
         <a-camera
             position="0 0 0"
             look-controls="enabled: false">
+            cursor="rayOrigin: mouse"
+            raycaster="objects: .sector"
         </a-camera>
 
 
@@ -97,80 +99,74 @@
     <!-- INTERACCIÓN -->
     <script>
 
-        document.addEventListener("DOMContentLoaded", function () {
+    document.addEventListener("DOMContentLoaded", function () {
 
-            const sectores=document.querySelectorAll(".sector");
+        const sectores = document.querySelectorAll(".sector");
 
-            sectores.forEach(function (sector) {
+        sectores.forEach(function (sector) {
 
-                sector.addEventListener("click", function () {
+            sector.addEventListener("click", function () {
 
-                    const seleccionado =
-                        sector.getAttribute("data-seleccionado");
+                const seleccionado =
+                    sector.getAttribute("data-seleccionado");
 
+                if (seleccionado === "true") {
 
-                    if (seleccionado === "true") {
+                    sector.setAttribute(
+                        "data-seleccionado",
+                        "false"
+                    );
 
-                        sector.setAttribute(
-                            "data-seleccionado",
-                            "false"
-                        );
+                    const id = sector.getAttribute("id");
 
-                        // Volver al color original
-                        const id =
-                            sector.getAttribute("id");
-
-                        if (id === "sector1") {
-                            sector.setAttribute(
-                                "material",
-                                "color: red; side: double"
-                            );
-                        }
-
-                        if (id === "sector2") {
-                            sector.setAttribute(
-                                "material",
-                                "color: blue; side: double"
-                            );
-                        }
-
-                        if (id === "sector3") {
-                            sector.setAttribute(
-                                "material",
-                                "color: green; side: double"
-                            );
-                        }
-
-                        if (id === "sector4") {
-                            sector.setAttribute(
-                                "material",
-                                "color: yellow; side: double"
-                            );
-                        }
-
-
-                    } else {
-
-                        sector.setAttribute(
-                            "data-seleccionado",
-                            "true"
-                        );
-
-                        // Color de selección
+                    if (id === "sector1") {
                         sector.setAttribute(
                             "material",
-                            "color: white; side: double"
+                            "color: red; side: double"
                         );
-
                     }
 
-                });
+                    if (id === "sector2") {
+                        sector.setAttribute(
+                            "material",
+                            "color: blue; side: double"
+                        );
+                    }
+
+                    if (id === "sector3") {
+                        sector.setAttribute(
+                            "material",
+                            "color: green; side: double"
+                        );
+                    }
+
+                    if (id === "sector4") {
+                        sector.setAttribute(
+                            "material",
+                            "color: yellow; side: double"
+                        );
+                    }
+
+                } else {
+
+                    sector.setAttribute(
+                        "data-seleccionado",
+                        "true"
+                    );
+
+                    sector.setAttribute(
+                        "material",
+                        "color: white; side: double"
+                    );
+
+                }
 
             });
 
         });
 
-    </script>
+    });
 
+</script>
 </body>
 </html>
