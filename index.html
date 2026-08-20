@@ -29,8 +29,6 @@
         <a-camera
             position="0 0 0"
             look-controls="enabled: false">
-            cursor="rayOrigin: mouse"
-            raycaster="objects: .sector">
         </a-camera>
 
 
@@ -97,72 +95,71 @@
 
 
     <!-- INTERACCIÓN -->
-    <script>
+   <script>
 
-    document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
 
-        const sectores = document.querySelectorAll(".sector");
+    const sectores = document.querySelectorAll(".sector");
 
-        sectores.forEach(function (sector) {
+    sectores.forEach(function (sector) {
 
-            sector.addEventListener("click", function () {
+        sector.addEventListener("touchstart", function (evento) {
 
-                const seleccionado =
-                    sector.getAttribute("data-seleccionado");
+            evento.preventDefault();
 
-                if (seleccionado === "true") {
+            const seleccionado =
+                sector.getAttribute("data-seleccionado");
 
-                    sector.setAttribute(
-                        "data-seleccionado",
-                        "false"
-                    );
+            if (seleccionado === "true") {
 
-                    const id = sector.getAttribute("id");
+                sector.setAttribute(
+                    "data-seleccionado",
+                    "false"
+                );
 
-                    if (id === "sector1") {
-                        sector.setAttribute(
-                            "material",
-                            "color: red; side: double"
-                        );
-                    }
+                const id = sector.getAttribute("id");
 
-                    if (id === "sector2") {
-                        sector.setAttribute(
-                            "material",
-                            "color: blue; side: double"
-                        );
-                    }
-
-                    if (id === "sector3") {
-                        sector.setAttribute(
-                            "material",
-                            "color: green; side: double"
-                        );
-                    }
-
-                    if (id === "sector4") {
-                        sector.setAttribute(
-                            "material",
-                            "color: yellow; side: double"
-                        );
-                    }
-
-                } else {
-
-                    sector.setAttribute("data-seleccionado","true"
-                    );
-
-                    sector.setAttribute("material","color: white; side: double"
-                    );
-
+                if (id === "sector1") {
+                    sector.setAttribute("material",
+                        "color: red; side: double");
                 }
 
-            });
+                if (id === "sector2") {
+                    sector.setAttribute("material",
+                        "color: blue; side: double");
+                }
+
+                if (id === "sector3") {
+                    sector.setAttribute("material",
+                        "color: green; side: double");
+                }
+
+                if (id === "sector4") {
+                    sector.setAttribute("material",
+                        "color: yellow; side: double");
+                }
+
+            } else {
+
+                sector.setAttribute(
+                    "data-seleccionado",
+                    "true"
+                );
+
+                sector.setAttribute(
+                    "material",
+                    "color: white; side: double"
+                );
+
+            }
 
         });
 
     });
 
-</script>
+});
+
+</script>    
+
 </body>
 </html>
