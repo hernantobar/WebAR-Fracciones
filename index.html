@@ -20,8 +20,8 @@
 
 <body>
 
-    <a-scene
-        mindar-image="imageTargetSrc: assets/targets/marcador.mind;"
+   <a-scene
+        mindar-image="imageTargetSrc: assets/tarjeta/marcador.mind;"
         vr-mode-ui="enabled: false"
         device-orientation-permission-ui="enabled: false">
 
@@ -31,38 +31,154 @@
             look-controls="enabled: false">
         </a-camera>
 
-        <!-- Objeto que aparecerá sobre el marcador -->
+
+        <!-- OBJETO SOBRE LA IMAGEN -->
         <a-entity
             mindar-image-target="targetIndex: 0">
 
+            <!-- Grupo del círculo -->
             <a-entity
-                geometry="primitive: circle; radius: 0.3; thetaStart: 0; thetaLength: 90"
-                material="color: yellow; side: double"
-                position="0 0 0">
+                position="0 0 0"
+                scale="0.3 0.3 0.3">
+
+
+                <!-- SECTOR 1 -->
+                <a-entity
+                    id="sector1"
+                    class="sector"
+                    geometry="primitive: circle;
+                              radius: 1;
+                              thetaStart: 0;
+                              thetaLength: 90"
+                    material="color: red; side: double"
+                    rotation="0 0 0">
                 </a-entity>
 
-            <a-entity
-                geometry="primitive: circle; radius: 0.3; thetaStart: 90; thetaLength: 90"
-                material="color: red; side: double"
-                position="0 0 0">
-            </a-entity>
 
-            <a-entity
-                geometry="primitive: circle; radius: 0.3; thetaStart: 180; thetaLength: 90"
-                material="color: green; side: double"
-                position="0 0 0">
-            </a-entity>
+                <!-- SECTOR 2 -->
+                <a-entity
+                    id="sector2"
+                    class="sector"
+                    geometry="primitive: circle;
+                              radius: 1;
+                              thetaStart: 90;
+                              thetaLength: 90"
+                    material="color: blue; side: double"
+                    rotation="0 0 0">
+                </a-entity>
 
-            <a-entity
-                geometry="primitive: circle; radius: 0.3; thetaStart: 270; thetaLength: 90"
-                material="color: blue; side: double"
-                position="0 0 0">
+
+                <!-- SECTOR 3 -->
+                <a-entity
+                    id="sector3"
+                    class="sector"
+                    geometry="primitive: circle;
+                              radius: 1;
+                              thetaStart: 180;
+                              thetaLength: 90"
+                    material="color: green; side: double"
+                    rotation="0 0 0">
+                </a-entity>
+
+
+                <!-- SECTOR 4 -->
+                <a-entity
+                    id="sector4"
+                    class="sector"
+                    geometry="primitive: circle;
+                              radius: 1;
+                              thetaStart: 270;
+                              thetaLength: 90"
+                    material="color: yellow; side: double"
+                    rotation="0 0 0">
+                </a-entity>
+
             </a-entity>
 
         </a-entity>
 
     </a-scene>
 
-</body>
 
+    <!-- INTERACCIÓN -->
+    <script>
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const sectores =
+                document.querySelectorAll(".sector");
+
+
+            sectores.forEach(function (sector) {
+
+                sector.addEventListener("click", function () {
+
+                    const seleccionado =
+                        sector.getAttribute("data-seleccionado");
+
+
+                    if (seleccionado === "true") {
+
+                        sector.setAttribute(
+                            "data-seleccionado",
+                            "false"
+                        );
+
+                        // Volver al color original
+                        const id =
+                            sector.getAttribute("id");
+
+                        if (id === "sector1") {
+                            sector.setAttribute(
+                                "material",
+                                "color: red; side: double"
+                            );
+                        }
+
+                        if (id === "sector2") {
+                            sector.setAttribute(
+                                "material",
+                                "color: blue; side: double"
+                            );
+                        }
+
+                        if (id === "sector3") {
+                            sector.setAttribute(
+                                "material",
+                                "color: green; side: double"
+                            );
+                        }
+
+                        if (id === "sector4") {
+                            sector.setAttribute(
+                                "material",
+                                "color: yellow; side: double"
+                            );
+                        }
+
+
+                    } else {
+
+                        sector.setAttribute(
+                            "data-seleccionado",
+                            "true"
+                        );
+
+                        // Color de selección
+                        sector.setAttribute(
+                            "material",
+                            "color: white; side: double"
+                        );
+
+                    }
+
+                });
+
+            });
+
+        });
+
+    </script>
+
+</body>
 </html>
