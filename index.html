@@ -30,7 +30,7 @@
             position="0 0 0"
             look-controls="enabled: false">
             cursor="rayOrigin: mouse"
-            raycaster="objects: .sector"
+            raycaster="objects: .sector">
         </a-camera>
 
 
@@ -149,14 +149,10 @@
 
                 } else {
 
-                    sector.setAttribute(
-                        "data-seleccionado",
-                        "true"
+                    sector.setAttribute("data-seleccionado","true"
                     );
 
-                    sector.setAttribute(
-                        "material",
-                        "color: white; side: double"
+                    sector.setAttribute("material","color: white; side: double"
                     );
 
                 }
