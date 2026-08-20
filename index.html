@@ -95,71 +95,108 @@
 
 
     <!-- INTERACCIÓN -->
-   <script>
+<script>
 
 document.addEventListener("DOMContentLoaded", function () {
 
-    const sectores = document.querySelectorAll(".sector");
+    const sectores = [
+        document.querySelector("#sector1"),
+        document.querySelector("#sector2"),
+        document.querySelector("#sector3"),
+        document.querySelector("#sector4")
+    ];
 
-    sectores.forEach(function (sector) {
+    const coloresOriginales = [
+        "red",
+        "blue",
+        "green",
+        "yellow"
+    ];
 
-        sector.addEventListener("touchstart", function (evento) {
+    document.addEventListener("touchstart", function (evento) {
 
-            evento.preventDefault();
+        const dedo = evento.touches[0];
 
-            const seleccionado =
-                sector.getAttribute("data-seleccionado");
+        const x = dedo.clientX;
+        const y = dedo.clientY;
 
-            if (seleccionado === "true") {
+        const centroX = window.innerWidth / 2;
+        const centroY = window.innerHeight / 2;
 
-                sector.setAttribute(
-                    "data-seleccionado",
-                    "false"
-                );
+        const diferenciaX = x - centroX;
+        const diferenciaY = centroY - y;
 
-                const id = sector.getAttribute("id");
+        const distancia = Math.sqrt(
+            diferenciaX * diferenciaX +
+            diferenciaY * diferenciaY
+        );
 
-                if (id === "sector1") {
-                    sector.setAttribute("material",
-                        "color: red; side: double");
-                }
+        // Radio aproximado del círculo en pantalla
+        const radio = Math.min(
+            window.innerWidth,
+            window.innerHeight
+        ) * 0.15;
 
-                if (id === "sector2") {
-                    sector.setAttribute("material",
-                        "color: blue; side: double");
-                }
+        // Si el dedo está fuera del círculo, no hacemos nada
+        if (distancia > radio) {
+            return;
+        }
 
-                if (id === "sector3") {
-                    sector.setAttribute("material",
-                        "color: green; side: double");
-                }
+        // Calculamos el ángulo
+        let angulo = Math.atan2(
+            diferenciaY,
+            diferenciaX
+        ) * 180 / Math.PI;
 
-                if (id === "sector4") {
-                    sector.setAttribute("material",
-                        "color: yellow; side: double");
-                }
+        if (angulo < 0) {
+            angulo += 360;
+        }
 
-            } else {
+        // Determinamos el sector
+        let indice = Math.floor(angulo / 90);
 
-                sector.setAttribute(
-                    "data-seleccionado",
-                    "true"
-                );
+        const sector = sectores[indice];
 
-                sector.setAttribute(
-                    "material",
-                    "color: white; side: double"
-                );
+        if (!sector) {
+            return;
+        }
 
-            }
+        const seleccionado =
+            sector.getAttribute("data-seleccionado");
 
-        });
+        if (seleccionado === "true") {
+
+            sector.setAttribute(
+                "data-seleccionado",
+                "false"
+            );
+
+            sector.setAttribute(
+                "material",
+                "color: " +
+                coloresOriginales[indice] +
+                "; side: double"
+            );
+
+        } else {
+
+            sector.setAttribute(
+                "data-seleccionado",
+                "true"
+            );
+
+            sector.setAttribute(
+                "material",
+                "color: white; side: double"
+            );
+
+        }
 
     });
 
 });
 
-</script>    
-
+</script>
+    
 </body>
 </html>
