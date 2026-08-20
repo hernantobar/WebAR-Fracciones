@@ -99,6 +99,12 @@
 
 document.addEventListener("DOMContentLoaded", function () {
 
+    const escena = document.querySelector("a-scene");
+
+    const circulo = document.querySelector(
+        '[mindar-image-target="targetIndex: 0"]'
+    );
+
     const sectores = [
         document.querySelector("#sector1"),
         document.querySelector("#sector2"),
@@ -113,6 +119,7 @@ document.addEventListener("DOMContentLoaded", function () {
         "yellow"
     ];
 
+
     document.addEventListener("touchstart", function (evento) {
 
         const dedo = evento.touches[0];
@@ -120,49 +127,116 @@ document.addEventListener("DOMContentLoaded", function () {
         const x = dedo.clientX;
         const y = dedo.clientY;
 
-        const centroX = window.innerWidth / 2;
-        const centroY = window.innerHeight / 2;
 
-        const diferenciaX = x - centroX;
-        const diferenciaY = centroY - y;
+        /*
+        Convertimos la posición 3D del círculo
+        a posición real en la pantalla.
+        */
 
-        const distancia = Math.sqrt(
-            diferenciaX * diferenciaX +
-            diferenciaY * diferenciaY
+        const posicion3D =
+            new THREE.Vector3();
+
+        circulo.object3D.getWorldPosition(
+            posicion3D
         );
 
-        // Radio aproximado del círculo en pantalla
-        const radio = Math.min(
-            window.innerWidth,
-            window.innerHeight
-        ) * 0.15;
 
-        // Si el dedo está fuera del círculo, no hacemos nada
+        const camara =
+            escena.camera;
+
+        const posicionPantalla =
+            posicion3D.clone();
+
+        posicionPantalla.project(camara);
+
+
+        const centroX =
+            (posicionPantalla.x + 1) *
+            window.innerWidth / 2;
+
+        const centroY =
+            (-posicionPantalla.y + 1) *
+            window.innerHeight / 2;
+
+
+        /*
+        Calculamos la distancia
+        entre el dedo y el centro real.
+        */
+
+        const diferenciaX =
+            x - centroX;
+
+        const diferenciaY =
+            centroY - y;
+
+
+        const distancia =
+            Math.sqrt(
+                diferenciaX * diferenciaX +
+                diferenciaY * diferenciaY
+            );
+
+
+        /*
+        Calculamos aproximadamente
+        el tamaño real del círculo.
+        */
+
+        const radio =
+            window.innerHeight * 0.15;
+
+
+        // Si tocamos fuera del círculo,
+        // no hacemos nada.
+
         if (distancia > radio) {
             return;
         }
 
-        // Calculamos el ángulo
-        let angulo = Math.atan2(
-            diferenciaY,
-            diferenciaX
-        ) * 180 / Math.PI;
+
+        /*
+        Calculamos el ángulo.
+        */
+
+        let angulo =
+            Math.atan2(
+                diferenciaY,
+                diferenciaX
+            ) * 180 / Math.PI;
+
 
         if (angulo < 0) {
             angulo += 360;
         }
 
-        // Determinamos el sector
-        let indice = Math.floor(angulo / 90);
 
-        const sector = sectores[indice];
+        /*
+        Identificamos el sector.
+        */
+
+        const indice =
+            Math.floor(angulo / 90);
+
+
+        const sector =
+            sectores[indice];
+
 
         if (!sector) {
             return;
         }
 
+
+        /*
+        Cambiar color.
+        */
+
         const seleccionado =
-            sector.getAttribute("data-seleccionado");
+            sector.getAttribute(
+                "data-seleccionado"
+            );
+
 
         if (seleccionado === "true") {
 
