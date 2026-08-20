@@ -63,58 +63,13 @@
             mindar-image-target="targetIndex: 0">
 
             <!-- Grupo del círculo -->
+
             <a-entity
+                id="circulo"
                 position="0 0 0"
-                scale="0.3 0.3 0.3">
-
-
-                <!-- SECTOR 1 -->
-                <a-entity
-                    id="sector1"
-                    class="sector"
-                    geometry="primitive: circle;radius: 1; thetaStart: 0;thetaLength: 90"
-                    material="color: red; side: double"
-                    rotation="0 0 0">
-                </a-entity>
-
-
-                <!-- SECTOR 2 -->
-                <a-entity
-                    id="sector2"
-                    class="sector"
-                    geometry="primitive: circle; radius: 1;thetaStart: 90; thetaLength: 90"
-                    material="color: blue; side: double"
-                    rotation="0 0 0">
-                </a-entity>
-
-
-                <!-- SECTOR 3 -->
-                <a-entity
-                    id="sector3"
-                    class="sector"
-                    geometry="primitive: circle;
-                              radius: 1;
-                              thetaStart: 180;
-                              thetaLength: 90"
-                    material="color: green; side: double"
-                    rotation="0 0 0">
-                </a-entity>
-
-
-                <!-- SECTOR 4 -->
-                <a-entity
-                    id="sector4"
-                    class="sector"
-                    geometry="primitive: circle;
-                              radius: 1;
-                              thetaStart: 270;
-                              thetaLength: 90"
-                    material="color: yellow; side: double"
-                    rotation="0 0 0">
-                </a-entity>
-
+                scale= "0.3 0.3 0.3">
             </a-entity>
-
+            
         </a-entity>
 
     </a-scene>
@@ -142,176 +97,302 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const escena = document.querySelector("a-scene");
 
-    const circulo = document.querySelector(
+    const circulo = document.querySelector("#circulo");
+
+    const marcador = document.querySelector(
         '[mindar-image-target="targetIndex: 0"]'
     );
 
-    const sectores = [
-        document.querySelector("#sector1"),
-        document.querySelector("#sector2"),
-        document.querySelector("#sector3"),
-        document.querySelector("#sector4")
-    ];
+    const deslizador = document.querySelector("#partes");
 
-    const coloresOriginales = [
+    const numeroPartes = document.querySelector("#numeroPartes");
+
+
+    let cantidadPartes = 4;
+
+
+    const colores = [
         "red",
         "blue",
         "green",
-        "yellow"
+        "yellow",
+        "orange",
+        "purple",
+        "cyan",
+        "pink",
+        "lime",
+        "brown",
+        "magenta",
+        "teal"
     ];
 
 
-    document.addEventListener("touchstart", function (evento) {
+    function crearSectores(cantidad) {
 
-        const dedo = evento.touches[0];
+        circulo.innerHTML = "";
 
-        const x = dedo.clientX;
-        const y = dedo.clientY;
-
-
-        /*
-        Convertimos la posición 3D del círculo
-        a posición real en la pantalla.
-        */
-
-        const posicion3D =
-            new THREE.Vector3();
-
-        circulo.object3D.getWorldPosition(
-            posicion3D
-        );
+        const angulo =
+            360 / cantidad;
 
 
-        const camara =
-            escena.camera;
+        for (let i = 0; i < cantidad; i++) {
 
-        const posicionPantalla =
-            posicion3D.clone();
-
-        posicionPantalla.project(camara);
+            const sector =
+                document.createElement("a-entity");
 
 
-        const centroX =
-            (posicionPantalla.x + 1) *
-            window.innerWidth / 2;
-
-        const centroY =
-            (-posicionPantalla.y + 1) *
-            window.innerHeight / 2;
-
-
-        /*
-        Calculamos la distancia
-        entre el dedo y el centro real.
-        */
-
-        const diferenciaX =
-            x - centroX;
-
-        const diferenciaY =
-            centroY - y;
-
-
-        const distancia =
-            Math.sqrt(
-                diferenciaX * diferenciaX +
-                diferenciaY * diferenciaY
+            sector.setAttribute(
+                "id",
+                "sector" + i
             );
 
 
-        /*
-        Calculamos aproximadamente
-        el tamaño real del círculo.
-        */
-
-        const radio =
-            window.innerHeight * 0.15;
+            sector.classList.add("sector");
 
 
-        // Si tocamos fuera del círculo,
-        // no hacemos nada.
-
-        if (distancia > radio) {
-            return;
-        }
-
-
-        /*
-        Calculamos el ángulo.
-        */
-
-        let angulo =
-            Math.atan2(
-                diferenciaY,
-                diferenciaX
-            ) * 180 / Math.PI;
-
-
-        if (angulo < 0) {
-            angulo += 360;
-        }
-
-
-        /*
-        Identificamos el sector.
-        */
-
-        const indice =
-            Math.floor(angulo / 90);
-
-
-        const sector =
-            sectores[indice];
-
-
-        if (!sector) {
-            return;
-        }
-
-
-        /*
-        Cambiar color.
-        */
-
-        const seleccionado =
-            sector.getAttribute(
-                "data-seleccionado"
+            sector.setAttribute(
+                "geometry",
+                "primitive: circle; radius: 1; thetaStart: " +
+                (i * angulo) +
+                "; thetaLength: " +
+                angulo
             );
 
 
-        if (seleccionado === "true") {
+            sector.setAttribute(
+                "material",
+                "color: " +
+                colores[i % colores.length] +
+                "; side: double"
+            );
+
 
             sector.setAttribute(
                 "data-seleccionado",
                 "false"
             );
 
-            sector.setAttribute(
-                "material",
-                "color: " +
-                coloresOriginales[indice] +
-                "; side: double"
-            );
 
-        } else {
+            circulo.appendChild(sector);
+        }
+    }
 
-            sector.setAttribute(
-                "data-seleccionado",
-                "true"
-            );
 
-            sector.setAttribute(
-                "material",
-                "color: white; side: double"
+    /*
+    Crear inicialmente 4 sectores
+    */
+
+    crearSectores(4);
+
+
+    /*
+    Cuando se mueve el deslizador
+    */
+
+    deslizador.addEventListener(
+        "input",
+        function () {
+
+            cantidadPartes =
+                parseInt(this.value);
+
+
+            numeroPartes.textContent =
+                cantidadPartes;
+
+
+            crearSectores(
+                cantidadPartes
             );
 
         }
+    );
 
-    });
+
+    /*
+    Detectar toque en la pantalla
+    */
+
+    document.addEventListener(
+        "touchstart",
+        function (evento) {
+
+            const dedo =
+                evento.touches[0];
+
+
+            const x =
+                dedo.clientX;
+
+            const y =
+                dedo.clientY;
+
+
+            /*
+            Obtener posición real del círculo
+            */
+
+            const posicion3D =
+                new THREE.Vector3();
+
+
+            marcador.object3D.getWorldPosition(
+                posicion3D
+            );
+
+
+            const camara =
+                escena.camera;
+
+
+            const posicionPantalla =
+                posicion3D.clone();
+
+
+            posicionPantalla.project(
+                camara
+            );
+
+
+            const centroX =
+                (posicionPantalla.x + 1) *
+                window.innerWidth / 2;
+
+
+            const centroY =
+                (-posicionPantalla.y + 1) *
+                window.innerHeight / 2;
+
+
+            /*
+            Distancia del dedo al centro
+            */
+
+            const diferenciaX =
+                x - centroX;
+
+
+            const diferenciaY =
+                centroY - y;
+
+
+            const distancia =
+                Math.sqrt(
+                    diferenciaX *
+                    diferenciaX +
+
+                    diferenciaY *
+                    diferenciaY
+                );
+
+
+            /*
+            Radio aproximado
+            */
+
+            const radio =
+                window.innerHeight * 0.15;
+
+
+            if (distancia > radio) {
+                return;
+            }
+
+
+            /*
+            Calcular ángulo
+            */
+
+            let angulo =
+                Math.atan2(
+                    diferenciaY,
+                    diferenciaX
+                ) *
+                180 /
+                Math.PI;
+
+
+            if (angulo < 0) {
+                angulo += 360;
+            }
+
+
+            /*
+            Determinar sector
+            */
+
+            const sectorSeleccionado =
+                Math.floor(
+                    angulo /
+                    (360 / cantidadPartes)
+                );
+
+
+            const sector =
+                document.querySelector(
+                    "#sector" +
+                    sectorSeleccionado
+                );
+
+
+            if (!sector) {
+                return;
+            }
+
+
+            /*
+            Cambiar color
+            */
+
+            const seleccionado =
+                sector.getAttribute(
+                    "data-seleccionado"
+                );
+
+
+            if (
+                seleccionado === "true"
+            ) {
+
+                sector.setAttribute(
+                    "data-seleccionado",
+                    "false"
+                );
+
+
+                sector.setAttribute(
+                    "material",
+                    "color: " +
+                    colores[
+                        sectorSeleccionado %
+                        colores.length
+                    ] +
+                    "; side: double"
+                );
+
+
+            } else {
+
+                sector.setAttribute(
+                    "data-seleccionado",
+                    "true"
+                );
+
+
+                sector.setAttribute(
+                    "material",
+                    "color: white; side: double"
+                );
+
+            }
+
+        }
+    );
 
 });
 
 </script>
+    
     
 </body>
 </html>
