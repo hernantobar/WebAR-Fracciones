@@ -46,10 +46,7 @@
                 <a-entity
                     id="sector1"
                     class="sector"
-                    geometry="primitive: circle;
-                              radius: 1;
-                              thetaStart: 0;
-                              thetaLength: 90"
+                    geometry="primitive: circle;radius: 1; thetaStart: 0;thetaLength: 90"
                     material="color: red; side: double"
                     rotation="0 0 0">
                 </a-entity>
@@ -59,10 +56,7 @@
                 <a-entity
                     id="sector2"
                     class="sector"
-                    geometry="primitive: circle;
-                              radius: 1;
-                              thetaStart: 90;
-                              thetaLength: 90"
+                    geometry="primitive: circle; radius: 1;thetaStart: 90; thetaLength: 90"
                     material="color: blue; side: double"
                     rotation="0 0 0">
                 </a-entity>
@@ -105,9 +99,7 @@
 
         document.addEventListener("DOMContentLoaded", function () {
 
-            const sectores =
-                document.querySelectorAll(".sector");
-
+            const sectores=document.querySelectorAll(".sector");
 
             sectores.forEach(function (sector) {
 
